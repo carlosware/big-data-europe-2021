@@ -1,0 +1,25 @@
+plugins {
+      id "fi.linuxbox.download" version "0.6"
+      id "at.phatbl.shellexec" version "1.5.2"
+}
+
+def KafkaCliUrl = 'https://apache.uib.no/kafka/2.8.1/kafka_2.12-2.8.1.tgz'
+def KafkaCliPackage = 'kafka_2.12-2.8.1.tgz'
+def KafkaContainersUrl = 'https://github.com/wurstmeister/kafka-docker.git'
+def KafkaContainers = 'docker'
+
+import fi.linuxbox.gradle.download.Download
+task('kafkaclidownload', type: Download) {
+      from "$KafkaCliUrl"
+        to "$KafkaCliPackage"
+}
+
+import at.phatbl.shellexec.ShellExec
+task('docker', type: ShellExec) {
+      command "git clone $KafkaContainersUrl $KafkaContainers" 
+}
+
+task ('kafkacli', dependsOn: kafkaclidownload, type: ShellExec) {
+      command "tar zxf $KafkaCliPackage"
+}
+
